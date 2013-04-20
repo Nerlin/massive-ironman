@@ -1,0 +1,7 @@
+c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplSample\bin\Debug\SmplSample.exe
+c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplSample\bin\Debug\SmplSample.pdb
+c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplSample\bin\Debug\SmplDotNet.dll
+c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplSample\bin\Debug\SmplDotNet.pdb
+c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplSample\obj\Debug\SmplSample.csprojResolveAssemblyReference.cache
+c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplSample\obj\Debug\SmplSample.exe
+c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplSample\obj\Debug\SmplSample.pdb
