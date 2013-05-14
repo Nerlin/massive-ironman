@@ -21,6 +21,7 @@ namespace SmplSample
             modeling.EndsAt = 100;
             modeling.OnCause += modeling_OnCause;
 
+            modeling.Reset();
             modeling.Schedule(new Event { Transaction = new Transaction { Status = SampleTransactionStatus.Arriving }});
             modeling.Run();
 
@@ -44,23 +45,14 @@ namespace SmplSample
                     modeling_OnCause_DeviceAdvanced(modeling, e.Event);
                     break;
             }
-
-            mainDevice.Reserve(e.Event.Transaction);
-
         }
 
         static void modeling_OnCause_Arriving(IModeling modeling, IEvent @event)
         {
             modeling.Schedule(new Event { StartsSince = 7, Transaction = new Transaction { Status = SampleTransactionStatus.Arriving } });
 
+            @event.Transaction.Status = SampleTransactionStatus.DeviceAdvanced;
             mainDevice.Reserve(@event.Transaction);
-            modeling.Schedule(new Event { 
-                StartsSince = mainDevice.HandlingTime,
-                Transaction = new Transaction
-                                  {
-                                      Status = SampleTransactionStatus.DeviceAdvanced
-                                  }
-            });
 
             Console.WriteLine("[{0,5}]: Заявка встала в очередь на обработку.", modeling.Time);
         }
