@@ -30,7 +30,7 @@ namespace SmplDotNet
         /// <summary>
         /// Возвращает или задает время обработки транзакта данным устройством.
         /// </summary>
-        int HandlingTime { get; set; }
+        int HandlingTime { get; set; } 
 
         /// <summary>
         /// Возвращает время, когда транзакт будет обработан.
@@ -43,9 +43,24 @@ namespace SmplDotNet
         int LastReservationTime { get; }
 
         /// <summary>
+        /// Возвращает количество полученных на обработку заявок.
+        /// </summary>
+        int ReceivedTransactionsCount { get; }
+    
+        /// <summary>
         /// Возвращает количество обработанных транзакций.
         /// </summary>
         int HandledTransactionsCount { get; }
+
+        /// <summary>
+        /// Возвращает эффективное время работы устройства.
+        /// </summary>
+        int EffecientTime { get; }
+
+        /// <summary>
+        /// Возвращает среднее время обработки транзакта в устройстве.
+        /// </summary>
+        int AverageHandlingTime { get; }
 
         /// <summary>
         /// Возвращает или задает очередь для данного устройства.
@@ -56,6 +71,7 @@ namespace SmplDotNet
         /// Возвращает или задает объект моделирования, в котором используется данное устройство.
         /// </summary>
         IModeling Modeling { get; set; }
+
 
         /// <summary>
         /// Резервирует указанное устройство за заданным транзактом.

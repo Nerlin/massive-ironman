@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SmplDotNet.Realization
 {
+    [Serializable]
     public class Queue : IQueue
     {
-        protected Queue<ITransaction> events;
+        private readonly List<Memory> memories;
+        private readonly Queue<Memory> events;
 
         /// <summary>
         /// Возвращает или задает название очереди.
@@ -36,57 +39,54 @@ namespace SmplDotNet.Realization
             }
         }
 
-        private int left_;
-
         /// <summary>
         /// Возвращает количество элементов, которые покинули очередь.
         /// </summary>
-        public int Left
-        {
-            get { return left_; }
-        }
-
-        private int totalAmount_;
+        public int Left { get; private set; }
 
         /// <summary>
         /// Возвращает количество поступивших транзактов в очередь.
         /// </summary>
-        public int TotalAmount
-        {
-            get { return totalAmount_; }
-        }
-
-        private int lastDequeue_;
+        public int TotalAmount { get; private set; }
 
         /// <summary>
         /// Возвращает или задает время последнего освобождения очереди.
         /// </summary>
-        public int LastDequeue
+        public int LastDequeue { get; set; }
+
+        /// <summary>
+        /// Возвращает среднее время пребывания транзакта в очереди.
+        /// </summary>
+        public int AverageTime
         {
             get
             {
-                return lastDequeue_;
+                return (int) memories.Average(memory => memory.EndTime - memory.StartTime);
             }
-            set
-            {
-                lastDequeue_ = value;
+        }
+
+        /// <summary>
+        /// Возвращает среднее количество элементов в очереди.
+        /// </summary>
+        public int AverageAmount 
+        {
+            get 
+            { 
+                return (int) memories.Average(memory => memory.Elements);
             }
         }
 
         /// <summary>
         /// Возвращает или задает текущее моделирование.
         /// </summary>
-        public IModeling CurrentModeling
-        {
-            get;
-            set;
-        }
+        public IModeling CurrentModeling { get; set; }
 
 
         public Queue(IModeling modeling)
         {
-            events = new Queue<ITransaction>();
-            
+            this.events = new Queue<Memory>();
+            this.memories = new List<Memory>();
+
             this.CurrentModeling = modeling;
             this.Reset();
         }
@@ -99,8 +99,16 @@ namespace SmplDotNet.Realization
         {
             if (this.Capacity == 0 || this.Count < this.Capacity)
             {
-                events.Enqueue(transaction);
-                totalAmount_++;
+                var memory = new Memory
+                                 {
+                                     Elements = this.TotalAmount,
+                                     StartTime = this.CurrentModeling.Time,
+                                     Transaction = transaction
+                                 };
+
+                this.events.Enqueue(memory);
+                this.memories.Add(memory);
+                this.TotalAmount++;
             }
             else
             {
@@ -114,10 +122,13 @@ namespace SmplDotNet.Realization
         /// <returns></returns>
         public ITransaction Dequeue()
         {
-            lastDequeue_ = this.CurrentModeling.Time;
-            left_++;
+            this.LastDequeue = this.CurrentModeling.Time;
+            this.Left++;
 
-            return events.Dequeue();
+            var memory = this.events.Dequeue();
+            memory.EndTime = this.CurrentModeling.Time;
+
+            return memory.Transaction;
         }
 
         /// <summary>
@@ -126,7 +137,7 @@ namespace SmplDotNet.Realization
         /// <returns></returns>
         public ITransaction Peek()
         {
-            return events.Peek();
+            return this.events.Peek().Transaction;
         }
 
         /// <summary>
@@ -134,8 +145,12 @@ namespace SmplDotNet.Realization
         /// </summary>
         public void Reset()
         {
-            left_ = 0;
-            totalAmount_ = 0;
+            this.Left = 0;
+            this.TotalAmount = 0;
+            this.LastDequeue = 0;
+
+            this.events.Clear();
+            this.memories.Clear();
         }
 
         /// <summary>
@@ -143,7 +158,7 @@ namespace SmplDotNet.Realization
         /// </summary>
         public void Clear()
         {
-            events.Clear();
+            this.events.Clear();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace SmplDotNet
 {
     public class ModelingCauseEventArgs : EventArgs
     {
-        private IEvent event_;
+        private readonly IEvent event_;
         public IEvent Event
         {
             get
@@ -22,5 +22,5 @@ namespace SmplDotNet
         }
     }
 
-    public delegate void ModelingCauseEventHandler(object sender, ModelingCauseEventArgs args);
+    public delegate void ModelingCauseEventHandler(object sender, ModelingCauseEventArgs e);
 }

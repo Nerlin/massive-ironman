@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SmplDotNet
+﻿namespace SmplDotNet
 {
     public interface IQueue
     {
@@ -36,6 +31,16 @@ namespace SmplDotNet
         /// Возвращает или задает время последнего освобождения очереди.
         /// </summary>
         int LastDequeue { get; set; }
+
+        /// <summary>
+        /// Возвращает среднее время пребывания транзакта в очереди.
+        /// </summary>
+        int AverageTime { get; }
+
+        /// <summary>
+        /// Возвращает среднее количество элементов в очереди.
+        /// </summary>
+        int AverageAmount { get; }
 
         /// <summary>
         /// Возвращает или задает текущее моделирование.

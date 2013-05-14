@@ -1,5 +1,8 @@
-﻿namespace SmplDotNet.Realization
+﻿using System;
+
+namespace SmplDotNet.Realization
 {
+    [Serializable]
     public class Event : IEvent
     {
         /// <summary>

@@ -1,5 +1,8 @@
-﻿namespace SmplDotNet.Realization
+﻿using System;
+
+namespace SmplDotNet.Realization
 {
+    [Serializable]
     public class Transaction: ITransaction
     {
         /// <summary>
@@ -25,5 +28,16 @@
         /// Следует использовать для определения типа заявки.
         /// </summary>
         public object Status { get; set; }
+
+        /// <summary>
+        /// Возвращает или задает время появления транзакта.
+        /// </summary>
+        public int StartedAt { get; set; }
+
+        /// <summary>
+        /// Возвращает или задает длительность обработки данного транзакта.
+        /// Считается без времени пробывания транзакта в очередях.
+        /// </summary>
+        public int Duration { get; set; }
     }
 }

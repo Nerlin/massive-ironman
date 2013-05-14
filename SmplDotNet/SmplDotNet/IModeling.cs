@@ -18,6 +18,11 @@ namespace SmplDotNet
         int EndsAt { get; set; }
 
         /// <summary>
+        /// Возвращает или задает количество заявок, которые прошли весь этап моделирования.
+        /// </summary>
+        int Completed { get; set; }
+
+        /// <summary>
         /// Возвращает или задает список устройств.
         /// </summary>
         IList<IDevice> Devices { get; set; }
@@ -32,6 +37,13 @@ namespace SmplDotNet
         /// заданным номером события через указанное время.
         /// </summary>
         void Schedule(IEvent scheduledEvent);
+
+        /// <summary>
+        /// Задает количество транзакций для моделирования.
+        /// </summary>
+        /// <param name="status">Статус транзакции, при котором ведется подсчет.</param>
+        /// <param name="amount">Количество транзактов.</param>
+        void SetTranscationProcessingAmount(object status, int amount);
 
         /// <summary>
         /// Удаляет событие, которое должно выполниться в текущий промежуток времени и
@@ -54,8 +66,15 @@ namespace SmplDotNet
         void ReleaseDevices();
 
         /// <summary>
+        /// Останавливает моделирование.
+        /// </summary>
+        void Break();
+
+        /// <summary>
         /// Событие, происходящее при выполнении запланированного события.
         /// </summary>
         event ModelingCauseEventHandler OnCause;
+
+        void Reset();
     }
 }

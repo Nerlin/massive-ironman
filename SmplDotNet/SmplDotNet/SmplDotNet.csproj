@@ -39,14 +39,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDistribution.cs" />
     <Compile Include="ModelingCauseEventArgs.cs" />
     <Compile Include="Realization\Device.cs" />
+    <Compile Include="Realization\Distributions\ExponentialDistribution.cs" />
+    <Compile Include="Realization\Distributions\NormalDistribution.cs" />
+    <Compile Include="Realization\Distributions\PoissonDistribution.cs" />
+    <Compile Include="Realization\Distributions\RangeDistribution.cs" />
     <Compile Include="Realization\Event.cs" />
     <Compile Include="IDevice.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="IModeling.cs" />
     <Compile Include="IQueue.cs" />
     <Compile Include="ITransaction.cs" />
+    <Compile Include="Realization\Memory.cs" />
     <Compile Include="Realization\Modeling.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Realization\Queue.cs" />

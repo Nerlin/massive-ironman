@@ -1,5 +1,5 @@
-c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplDotNet\obj\Debug\SmplDotNet.csprojResolveAssemblyReference.cache
-c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplDotNet\bin\Debug\SmplDotNet.dll
-c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplDotNet\bin\Debug\SmplDotNet.pdb
-c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplDotNet\obj\Debug\SmplDotNet.dll
-c:\users\nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplDotNet\obj\Debug\SmplDotNet.pdb
+C:\Users\Nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplDotNet\bin\Debug\SmplDotNet.dll
+C:\Users\Nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplDotNet\bin\Debug\SmplDotNet.pdb
+C:\Users\Nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplDotNet\obj\Debug\SmplDotNet.dll
+C:\Users\Nerlin\documents\visual studio 2012\Projects\SmplDotNet\SmplDotNet\obj\Debug\SmplDotNet.pdb
+C:\Users\Nerlin\Documents\Visual Studio 2012\Projects\SmplDotNet\SmplDotNet\obj\Debug\SmplDotNet.csprojResolveAssemblyReference.cache

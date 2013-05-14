@@ -1,64 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SmplDotNet.Realization
 {
+    [Serializable]
     public class Device : IDevice
     {
+        private readonly List<Memory> memories;
+        private Memory currentMemory;
+
         /// <summary>
         /// Возвращает или задает номер устройства.
         /// </summary>
-        public int Number
-        { 
-            get;
-            set;
-        }
+        public int Number { get; set; }
 
         /// <summary>
         /// Возвращает или задает название устройства.
         /// </summary>
-        public string Name 
-        {
-            get;
-            set;
-        }
-
-        private bool reserved_;
+        public string Name { get; set; }
 
         /// <summary>
         /// Возвращает статус данного устройства.
         /// </summary>
-        public bool Reserved
-        {
-            get { return reserved_; }
-        }
-
-        private ITransaction transaction_;
+        public bool Reserved { get; private set; }
 
         /// <summary>
         /// Возвращает текущую транзакцию, которая находится на обработке в данном устройстве.
         /// </summary>
         public ITransaction CurrentTransaction
         {
-            get { return transaction_; }
+            get
+            {
+                return currentMemory.Transaction;
+            }
         }
 
         /// <summary>
         /// Возвращает или задает объект моделирования, в котором используется данное устройство.
         /// </summary>
-        public IModeling Modeling
-        {
-            get;
-            set;
-        }
+        public IModeling Modeling { get; set; }
 
         /// <summary>
         /// Возвращает или задает время обработки транзакта данным устройством.
         /// </summary>
-        public int HandlingTime
-        {
-            get;
-            set;
-        }
+        public int HandlingTime { get; set; }
 
         /// <summary>
         /// Возвращает время, когда транзакт будет обработан.
@@ -75,20 +61,35 @@ namespace SmplDotNet.Realization
         /// <summary>
         /// Возвращает время, когда в последний раз было зарезервировано устройство.
         /// </summary>
-        public int LastReservationTime
-        {
-            get;
-            set;
-        }
+        public int LastReservationTime { get;set; }
 
-        private int handledTransactionsCount;
+        /// <summary>
+        /// Возвращает количество полученных на обработку заявок.
+        /// </summary>
+        public int ReceivedTransactionsCount { get; private set; }
 
         /// <summary>
         /// Возвращает количество обработанных транзакций.
         /// </summary>
-        public int HandledTransactionsCount
+        public int HandledTransactionsCount { get; private set; }
+
+        /// <summary>
+        /// Возвращает эффективное время работы устройства.
+        /// </summary>
+        public int EffecientTime
         {
-            get { return handledTransactionsCount; }
+            get 
+            {
+                return this.Modeling.EndsAt - memories.Sum(memory => memory.EndTime - memory.StartTime);
+            }
+        }
+
+        /// <summary>
+        /// Возвращает среднее время обработки транзакта в устройстве.
+        /// </summary>
+        public int AverageHandlingTime
+        {
+            get { return (int) memories.Average(memory => memory.EndTime - memory.StartTime); }
         }
 
         /// <summary>
@@ -107,9 +108,14 @@ namespace SmplDotNet.Realization
         public event EventHandler OnRelease;
 
 
+
         public Device(IModeling modeling)
         {
+            this.memories = new List<Memory>();
+            this.currentMemory = new Memory();
+
             this.Modeling = modeling;
+            this.Queue = new Queue(modeling);
             this.Reset();
             this.OnRelease += Device_OnRelease;
         }
@@ -121,23 +127,25 @@ namespace SmplDotNet.Realization
         }
 
         /// <summary>
-        /// Резервирует указанное устройство за заданным транзактом.
+        /// Резервирует указанное устройство за заданным транзактом и помещает событие об окончании обработки в модель.
         /// </summary>
         /// <param name="transaction"></param>
         public void Reserve(ITransaction transaction)
         {
+            this.ReceivedTransactionsCount++;
+
             if (!this.Reserved)
             {
                 if (transaction != null)
                 {
-                    transaction_ = transaction;
-                    reserved_ = true;
+                    this.currentMemory = new Memory {StartTime = this.Modeling.Time, Transaction = transaction};
+                    this.Reserved = true;
 
                     this.LastReservationTime = this.Modeling.Time;
                     if (this.OnStartHandling != null)
-                    {
                         this.OnStartHandling(this, new EventArgs());
-                    }
+                    
+                    this.Modeling.Schedule(new Event { StartsSince = this.HandlingTime , Transaction = transaction});
                 }
                 else
                 {
@@ -158,9 +166,11 @@ namespace SmplDotNet.Realization
         /// </summary>
         public void Release()
         {
-            handledTransactionsCount++;
-            transaction_ = null;
-            reserved_ = false;
+            this.currentMemory.EndTime = this.Modeling.Time;
+            this.memories.Add(this.currentMemory);
+
+            this.HandledTransactionsCount++;
+            this.Reserved = false;
 
             if (this.OnRelease != null)
                 this.OnRelease(this, new EventArgs());
@@ -171,9 +181,15 @@ namespace SmplDotNet.Realization
         /// </summary>
         public void Reset()
         {
-            handledTransactionsCount = 0;
-            transaction_ = null;
-            reserved_ = false;
+            this.ReceivedTransactionsCount = 0;
+            this.HandledTransactionsCount = 0;
+            this.Reserved = false;
+            this.LastReservationTime = 0;
+
+            this.memories.Clear();
+            this.currentMemory = new Memory();
+
+            this.Queue.Reset();
         }
     }
 }
